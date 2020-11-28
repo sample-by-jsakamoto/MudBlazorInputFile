@@ -1,0 +1,60 @@
+﻿@inject ISnackbar Snackbar
+
+<div class="my-6">
+    <MudText Typo="Typo.body1">Please upload your avator picture.</MudText>
+</div>
+
+<div class="my-6">
+    <MudAvatar Image="@ImageUrl" Style="width:100px;height:100px;">
+        No Image
+    </MudAvatar>
+</div>
+
+<div class="my-6">
+    <InputFile OnChange="OnInputFileChange" />
+</div>
+
+<div class="my-6">
+    <MudButton Disabled="@(SelectedFile == null)" OnClick="OnClickUpload" Variant="Variant.Filled" Color="Color.Secondary">
+        Upload
+    </MudButton>
+</div>
+
+@code {
+
+    private string ImageUrl = "";
+
+    private IBrowserFile SelectedFile = null;
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs args)
+    {
+        this.SelectedFile = null;
+        this.ImageUrl = "";
+
+        if (!args.File.ContentType.StartsWith("image/"))
+        {
+            this.Snackbar.Add("Chosed file is not picture.", Severity.Error);
+            return;
+        }
+        if (args.File.Size > 512000 /*512KB*/)
+        {
+            this.Snackbar.Add("Chosed file is too large.", Severity.Error);
+            return;
+        }
+
+        this.SelectedFile = args.File;
+
+        var contentBytes = new byte[this.SelectedFile.Size];
+        using var stream = this.SelectedFile.OpenReadStream();
+        await stream.ReadAsync(contentBytes, 0, contentBytes.Length);
+
+        var contentBase64Str = Convert.ToBase64String(contentBytes);
+        var contentType = this.SelectedFile.ContentType;
+        this.ImageUrl = "data:" + contentType + ";base64," + contentBase64Str;
+    }
+
+    private void OnClickUpload()
+    {
+        this.Snackbar.Add("Success!", Severity.Success);
+    }
+}

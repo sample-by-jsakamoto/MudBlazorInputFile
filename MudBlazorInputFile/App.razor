@@ -1,0 +1,28 @@
+@inject ISnackbar Snackbar
+
+<MudThemeProvider />
+<MudSnackbarProvider />
+
+<div>
+    <MudAppBar Color="Color.Primary" Fixed="false">
+        <h1>Material Designed "input type=file" with MudBlazor</h1>
+        <MudAppBarSpacer />
+        <MudButton StartIcon="@Icons.Custom.GitHub" Link="https://github.com/sample-by-jsakamoto/MudBlazorInputFile/" Target="_blank" Color="Color.Inherit">
+            Source Code
+        </MudButton>
+    </MudAppBar>
+</div>
+
+<div class="form-area">
+    <MudPaper>
+        <UploadAvatorPicture />
+    </MudPaper>
+</div>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        this.Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+    }
+}
