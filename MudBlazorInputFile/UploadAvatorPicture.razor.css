@@ -1,1 +1,16 @@
-﻿
+﻿.avatar-picture-inputfile-container {
+    white-space: nowrap;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+}
+
+.selected-file-name {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+    border-bottom: solid 1px var(--mud-palette-lines-inputs);
+    padding: 6px 0 6px 0;
+}

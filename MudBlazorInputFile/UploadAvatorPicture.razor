@@ -12,9 +12,20 @@
 
 <div class="my-6">
     <InputFile id="avatar-picture-inputfile" OnChange="OnInputFileChange" style="display:none;" />
-    <label for="avatar-picture-inputfile" class="mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-filled-size-medium mud-ripple">
-        Choose File
-    </label>
+    <div class="caption">
+        <MudText Typo="Typo.caption">Avatar picture file</MudText>
+    </div>
+    <div class="avatar-picture-inputfile-container">
+        <label for="avatar-picture-inputfile" class="selected-file-name">
+            @SelectedFileName
+        </label>
+        <label for="avatar-picture-inputfile" class="mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-filled-size-medium mud-ripple">
+            Choose File
+        </label>
+    </div>
+    <div class="mud-input-helper-text">
+        Max allowed file size is 512KB.
+    </div>
 </div>
 
 <div class="my-6">
@@ -28,6 +39,8 @@
     private string ImageUrl = "";
 
     private IBrowserFile SelectedFile = null;
+
+    private string SelectedFileName => this.SelectedFile?.Name ?? "No file chosen";
 
     private async Task OnInputFileChange(InputFileChangeEventArgs args)
     {
