@@ -1,7 +1,9 @@
-﻿@inject ISnackbar Snackbar
+﻿@using MudBlazorInputFile.I18nText.UploadAvatorPicture
+@inject ISnackbar Snackbar
+@inject Toolbelt.Blazor.I18nText.I18nText I18nText
 
 <div class="my-6">
-    <MudText Typo="Typo.body1">Please upload your avator picture.</MudText>
+    <MudText Typo="Typo.body1">@Localize.Please_upload_your_avator_picture</MudText>
 </div>
 
 <div class="my-6">
@@ -13,36 +15,42 @@
 <div class="my-6 @(this.ErrorText == null ? "" : "error")">
     <InputFile id="avatar-picture-inputfile" OnChange="OnInputFileChange" style="display:none;" />
     <div class="caption">
-        <MudText Typo="Typo.caption">Avatar picture file</MudText>
+        <MudText Typo="Typo.caption">@Localize.Avatar_picture_file</MudText>
     </div>
     <div class="avatar-picture-inputfile-container">
         <label for="avatar-picture-inputfile" class="selected-file-name">
             @SelectedFileName
         </label>
         <label for="avatar-picture-inputfile" class="mud-button-root mud-button mud-button-filled mud-button-filled-primary mud-button-filled-size-medium mud-ripple">
-            Choose File
+            @Localize.Choose_File
         </label>
     </div>
     <div class="mud-input-helper-text">
-        @(this.ErrorText ?? "Max allowed file size is 512KB.")
+        @(this.ErrorText ?? Localize.Max_allowed_file_size_is_512KB)
     </div>
 </div>
 
 <div class="my-6">
     <MudButton Disabled="@(SelectedFile == null || ErrorText != null)" OnClick="OnClickUpload" Variant="Variant.Filled" Color="Color.Secondary">
-        Upload
+        @Localize.Upload
     </MudButton>
 </div>
 
 @code {
+    private Localize Localize = new Localize();
 
     private string ImageUrl = "";
 
     private IBrowserFile SelectedFile = null;
 
-    private string SelectedFileName => this.SelectedFile?.Name ?? "No file chosen";
+    private string SelectedFileName => this.SelectedFile?.Name ?? this.Localize.No_file_chosen;
 
     private string ErrorText = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.Localize = await this.I18nText.GetTextTableAsync<Localize>(this);
+    }
 
     private async Task OnInputFileChange(InputFileChangeEventArgs args)
     {
@@ -52,12 +60,12 @@
 
         if (!args.File.ContentType.StartsWith("image/"))
         {
-            this.ErrorText = "Chosed file is not picture.";
+            this.ErrorText = this.Localize.Chosed_file_is_not_picture;
             return;
         }
         if (args.File.Size > 512000 /*512KB*/)
         {
-            this.ErrorText = "Chosed file is too large.";
+            this.ErrorText = this.Localize.Chosed_file_is_too_large;
             return;
         }
 
@@ -72,6 +80,6 @@
 
     private void OnClickUpload()
     {
-        this.Snackbar.Add("Success!", Severity.Success);
+        this.Snackbar.Add(this.Localize.Success, Severity.Success);
     }
 }
