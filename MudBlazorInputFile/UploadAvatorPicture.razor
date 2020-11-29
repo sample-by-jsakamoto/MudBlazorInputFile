@@ -10,7 +10,7 @@
     </MudAvatar>
 </div>
 
-<div class="my-6">
+<div class="my-6 @(this.ErrorText == null ? "" : "error")">
     <InputFile id="avatar-picture-inputfile" OnChange="OnInputFileChange" style="display:none;" />
     <div class="caption">
         <MudText Typo="Typo.caption">Avatar picture file</MudText>
@@ -24,12 +24,12 @@
         </label>
     </div>
     <div class="mud-input-helper-text">
-        Max allowed file size is 512KB.
+        @(this.ErrorText ?? "Max allowed file size is 512KB.")
     </div>
 </div>
 
 <div class="my-6">
-    <MudButton Disabled="@(SelectedFile == null)" OnClick="OnClickUpload" Variant="Variant.Filled" Color="Color.Secondary">
+    <MudButton Disabled="@(SelectedFile == null || ErrorText != null)" OnClick="OnClickUpload" Variant="Variant.Filled" Color="Color.Secondary">
         Upload
     </MudButton>
 </div>
@@ -42,23 +42,24 @@
 
     private string SelectedFileName => this.SelectedFile?.Name ?? "No file chosen";
 
+    private string ErrorText = null;
+
     private async Task OnInputFileChange(InputFileChangeEventArgs args)
     {
-        this.SelectedFile = null;
+        this.SelectedFile = args.File;
         this.ImageUrl = "";
+        this.ErrorText = null;
 
         if (!args.File.ContentType.StartsWith("image/"))
         {
-            this.Snackbar.Add("Chosed file is not picture.", Severity.Error);
+            this.ErrorText = "Chosed file is not picture.";
             return;
         }
         if (args.File.Size > 512000 /*512KB*/)
         {
-            this.Snackbar.Add("Chosed file is too large.", Severity.Error);
+            this.ErrorText = "Chosed file is too large.";
             return;
         }
-
-        this.SelectedFile = args.File;
 
         var contentBytes = new byte[this.SelectedFile.Size];
         using var stream = this.SelectedFile.OpenReadStream();

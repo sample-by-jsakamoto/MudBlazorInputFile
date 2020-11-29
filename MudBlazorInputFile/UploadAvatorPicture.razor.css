@@ -14,3 +14,15 @@
     border-bottom: solid 1px var(--mud-palette-lines-inputs);
     padding: 6px 0 6px 0;
 }
+
+.error .caption {
+    color: var(--mud-palette-error);
+}
+
+.error .selected-file-name {
+    border-bottom-color: var(--mud-palette-error);
+}
+
+.error .mud-input-helper-text {
+    color: var(--mud-palette-error);
+}
